@@ -6,9 +6,13 @@ import React, {
 import {
   View,
   TouchableHighlight,
+  Platform,
+  TouchableNativeFeedback
 } from 'react-native';
 
 import Collapsible from './Collapsible';
+
+var Touchable = Platform.OS == 'android' && Platform.Version >= 21 ? TouchableNativeFeedback : TouchableHighlight;
 
 const COLLAPSIBLE_PROPS = Object.keys(Collapsible.propTypes);
 const VIEW_PROPS = Object.keys(View.propTypes);
@@ -77,9 +81,9 @@ class Accordion extends Component {
       <View {...viewProps}>
       {this.props.sections.map((section, key) => (
         <View key={key}>
-          <TouchableHighlight onPress={() => this._toggleSection(key)} underlayColor={this.props.underlayColor}>
+          <Touchable onPress={() => this._toggleSection(key)} underlayColor={this.props.underlayColor} disabled={section.disabled}>
             {this.props.renderHeader(section, key, this.state.activeSection === key)}
-          </TouchableHighlight>
+          </Touchable>
           <Collapsible collapsed={this.state.activeSection !== key} {...collapsibleProps}>
             {this.props.renderContent(section, key, this.state.activeSection === key)}
           </Collapsible>
